@@ -1,4 +1,4 @@
-using System;
+using Scripts.Player;
 using UnityEngine;
 
 [RequireComponent(typeof(CharacterController))]
@@ -17,6 +17,7 @@ public class PlayerInputHandler : MonoBehaviour
     [Header("References")]
     [SerializeField] private Camera playerCamera;
     [SerializeField] private CharacterController characterController;
+    [SerializeField] private PlayerController playerController;
     
     // Private
     private Vector3 _moveDirection = Vector3.zero;
@@ -79,8 +80,14 @@ public class PlayerInputHandler : MonoBehaviour
         }
         
         // Shooting
-        if (Input.GetMouseButtonDown(0))
+        if (Input.GetMouseButtonUp(0))
             TryShoot();
+        
+        // Aim
+        if (Input.GetMouseButtonDown(1))
+            StartAim();
+        if (Input.GetMouseButtonUp(1))
+            StopAim();
     }
 
     #endregion
@@ -89,8 +96,17 @@ public class PlayerInputHandler : MonoBehaviour
 
     private void TryShoot()
     {
-        Debug.Log("Shoot?");
-        
+        playerController.gunController.TryShoot();
+    }
+
+    private void StartAim()
+    {
+        playerController.gunController.StartAim();
+    }
+
+    private void StopAim()
+    {
+        playerController.gunController.StopAim();
     }
 
     #endregion

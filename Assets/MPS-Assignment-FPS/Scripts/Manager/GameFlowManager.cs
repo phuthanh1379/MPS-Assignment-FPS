@@ -12,17 +12,16 @@ namespace Scripts.Manager
         public bool GameIsEnding { get; private set; }
 
         [Header("Settings")] 
-        [SerializeField] private CanvasGroup endGameFadeCanvasGroup;
+        // [SerializeField] private CanvasGroup endGameFadeCanvasGroup;
         [SerializeField] private PlayerController playerPrefab;
         [SerializeField] private float endSceneLoadDelay;
         [SerializeField] private float timeLoadEndGameScene;
 
-        [Header("Referenced Components")] 
+        [Header("References")]
+        [SerializeField] private EnemyManager enemyManager;
         [SerializeField] private PopupManager popupManager;
-        
-        // Private
-        private PlayerController _player; 
-        
+        [SerializeField] private PlayerController player; 
+
         #region Unity Methods
 
         private void Start()
@@ -35,7 +34,7 @@ namespace Scripts.Manager
             if (GameIsEnding)
             {
                 var timeRatio = 1 - (timeLoadEndGameScene - Time.time) / endSceneLoadDelay;
-                endGameFadeCanvasGroup.alpha = timeRatio;
+                // endGameFadeCanvasGroup.alpha = timeRatio;
 
                 // AudioUtility.SetMasterVolume(1 - timeRatio);
 
@@ -53,7 +52,7 @@ namespace Scripts.Manager
                 //     EndGame(true);
 
                 // Test if player died
-                if (_player.IsDead)
+                if (player.IsDead)
                     EndGame(false);
             }
         }
@@ -64,11 +63,11 @@ namespace Scripts.Manager
 
         private void Init()
         {
+            // Init enemies
+            enemyManager.Init(10);
+            
             // Spawn player
-            _player = Instantiate(playerPrefab, transform);
-            _player.transform.localPosition = Vector3.zero;
-            _player.playerHP = new HitPoint(10, 10);
-            _player.Init();
+            player.Init();
         }
         
         private void EndGame(bool win)
@@ -79,7 +78,7 @@ namespace Scripts.Manager
 
             // Remember that we need to load the appropriate end scene after a delay
             GameIsEnding = true;
-            endGameFadeCanvasGroup.gameObject.SetActive(true);
+            // endGameFadeCanvasGroup.gameObject.SetActive(true);
             
             // // Win game
             // if (win)
